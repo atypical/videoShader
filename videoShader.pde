@@ -12,8 +12,8 @@
 */
 
 import processing.video.*;
-
 Capture video;
+Capture video2;
 
 PShader textureMix; // PShader that - given it's content - can be applied to textured geometry
 PImage[] images = new PImage[3]; // array to hold 3 images
@@ -21,20 +21,21 @@ int mixType; // variable to set the current mixType
 int maxTypes = 3; // variable used to keep the sketch within the maximum number of types (defined in the shader)
 
 void setup() {
-  size(1150, 850, P2D); // use the P2D OpenGL renderer
-
-  size(1600, 800, P2D); // use the P2D OpenGL renderer
-  
+  size(1200, 800, P2D); // use the P2D OpenGL renderer
+ 
   video = new Capture(this, width, height);
-  
+  video2 = new Capture(this, width, height);
   // Start capturing the images from the camera
   video.start();    
-  
+  video2.start();    
 
+  
   // load the images from the _Images folder (relative path from this sketch's folder) into the GLTexture array
-  images[0] = video;
   //images[0] = loadImage("images/Texture01.jpg");
-  images[1] = loadImage("images/Texture02.jpg");
+  //images[1] = loadImage("images/Texture02.jpg");
+
+  images[0] = video;
+  images[1] = video2;
   images[2] = loadImage("images/Texture03.jpg");
 
   // load the PShader with a fragment and a vertex shader
@@ -44,14 +45,14 @@ void setup() {
   textureMix.set("tex0", images[0]);
   textureMix.set("tex1", images[1]);
   textureMix.set("tex2", images[2]);
+
 }
 
 void draw() {
   background(0); // black background
 
-  video.read(); // Read a new video frame
-  video.loadPixels(); // Make the pixels of video available  
- 
+  video.read(); // Read a new video frame 
+  video2.read(); // Read a new video frame
 
   textureMix.set("mixType", mixType); // set the mixType
   textureMix.set("time", millis()/5000.0); // feed time to the PShader
